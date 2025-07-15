@@ -15,7 +15,7 @@ public class RentalRepository(DataContext context) : IRentalRepository
 
     public async Task<bool> IsCarAvailableAsync(int carId, DateTime startDate, DateTime endDate)
     {
-        return !await context.Rentals.AnyAsync(r =>
+        return await context.Rentals.AnyAsync(r =>
             r.CarId == carId &&
             r.StartDate < endDate && r.EndDate > startDate
         );

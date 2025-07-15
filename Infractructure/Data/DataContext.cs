@@ -7,16 +7,16 @@ namespace Infractructure.Data;
 
 public class DataContext(DbContextOptions<DataContext> options)
     : IdentityDbContext<IdentityUser, IdentityRole, string>(options)
-
 {
     public DbSet<Car> Cars { get; set; }
     public DbSet<Customer> Customers { get; set; }
     public DbSet<Branch> Branches { get; set; }
     public DbSet<Rental> Rentals { get; set; }
-    
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.Entity<Car>()
             .HasMany(c => c.Rentals)
             .WithOne(g => g.Car)

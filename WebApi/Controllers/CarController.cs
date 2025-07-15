@@ -11,7 +11,7 @@ namespace WebApi.Controllers;
 public class CarController(ICarService carService) : ControllerBase
 {
     [HttpGet]
-    public async Task<PagedResponse<List<GetCarDTO>>> GetAllCarsAsync(CarFilter filter)
+    public async Task<PagedResponse<List<GetCarDTO>>> GetAllCarsAsync([FromQuery] CarFilter filter)
     {
         return await carService.GetAllCarsAsync(filter);
     }

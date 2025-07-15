@@ -14,6 +14,9 @@ public class RentalService(
 {
     public async Task<Response<string>> CreateRentalAsync(CreateRentalDTO dto)
     {
+        dto.StartDate = DateTime.SpecifyKind(dto.StartDate, DateTimeKind.Utc);
+        dto.EndDate = DateTime.SpecifyKind(dto.EndDate, DateTimeKind.Utc);
+
         var isAvailable = await rentalRepository.IsCarAvailableAsync(dto.CarId, dto.StartDate, dto.EndDate);
         if (!isAvailable)
         {
