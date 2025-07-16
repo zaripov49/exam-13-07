@@ -30,6 +30,8 @@ builder.Services.AddScoped<IRentalRepository, RentalRepository>();
 builder.Services.AddScoped<IRentalService, RentalService>();
 
 
+builder.Services.AddMemoryCache();
+
 
 builder.Services.AddSwaggerGen(options =>
 {
