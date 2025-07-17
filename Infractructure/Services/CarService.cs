@@ -12,6 +12,7 @@ namespace Infractructure.Services;
 
 public class CarService(
         ICarRepository carRepository,
+        IRedisCacheService redisCacheService,
         IMapper mapper) : ICarService
 {
     public async Task<Response<string>> CreateCarAsync(CreateCarDTO createCarDTO)
@@ -23,6 +24,7 @@ public class CarService(
         {
             return new Response<string>("Something went wrong", HttpStatusCode.InternalServerError);
         }
+        await redisCacheService.RemoveData("cars");
         return new Response<string>("Created Car Successfully");
     }
 
@@ -40,6 +42,7 @@ public class CarService(
         {
             return new Response<string>("Something went wrong", HttpStatusCode.InternalServerError);
         }
+        await redisCacheService.RemoveData("cars");
         return new Response<string>("Deleted Car Successfully");
     }
 
@@ -54,6 +57,12 @@ public class CarService(
 
     public async Task<Response<GetCarDTO>> GetCarByIdAsync(int id)
     {
+        var cacheCar = await redisCacheService.GetData<GetCarDTO>($"cars");
+        if (cacheCar != null)
+        {
+            return new Response<GetCarDTO>(cacheCar);
+        }
+
         var car = await carRepository.GetByIdAsync(id);
         if (car == null)
         {
@@ -61,6 +70,7 @@ public class CarService(
         }
 
         var mapped = mapper.Map<GetCarDTO>(car);
+        await redisCacheService.SetData("cars", mapped, TimeSpan.FromMinutes(10));
         return new Response<GetCarDTO>(mapped);
     }
 
@@ -79,7 +89,7 @@ public class CarService(
         {
             return new Response<string>("Something went wrong", HttpStatusCode.InternalServerError);
         }
+        await redisCacheService.RemoveData("cars");
         return new Response<string>("Updated Car Successfuly");
     }
-
 }

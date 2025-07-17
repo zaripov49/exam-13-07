@@ -9,6 +9,7 @@ namespace Infractructure.Services;
 
 public class BranchService(
         IBranchRepository branchRepository,
+        IRedisCacheService redisCacheService
         IMapper mapper) : IBranchService
 {
     public async Task<Response<string>> CreateBranchAsync(CreateBranchDTO createBranchDTO)
@@ -20,6 +21,7 @@ public class BranchService(
         {
             return new Response<string>("Something went wrong", HttpStatusCode.InternalServerError);
         }
+        await redisCacheService.RemoveData("branchs");
         return new Response<string>("Created Branch Successfully");
     }
 
@@ -37,6 +39,7 @@ public class BranchService(
         {
             return new Response<string>("Something went wrong", HttpStatusCode.InternalServerError);
         }
+        await redisCacheService.RemoveData("branchs");
         return new Response<string>("Deleted Branch Successfully");
     }
 
@@ -76,6 +79,7 @@ public class BranchService(
         {
             return new Response<string>("Something went wrong", HttpStatusCode.InternalServerError);
         }
+        await redisCacheService.RemoveData("branchs");
         return new Response<string>("Updated Branch Successfuly");
     }
 }

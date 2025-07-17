@@ -110,6 +110,13 @@ builder.Services.AddDbContext<DataContext>(opt =>
     opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("RedisCache"); 
+    options.InstanceName = "practis"; 
+});
+
+
 builder.Services.AddHttpContextAccessor();
 
 
